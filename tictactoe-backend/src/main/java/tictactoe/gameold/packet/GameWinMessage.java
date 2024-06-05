@@ -1,4 +1,4 @@
-package tictactoe.game.packet;
+package tictactoe.gameold.packet;
 
 import lombok.Data;
 

@@ -1,4 +1,4 @@
-package tictactoe.game;
+package tictactoe.gameold;
 
 import lombok.Builder;
 import lombok.Data;

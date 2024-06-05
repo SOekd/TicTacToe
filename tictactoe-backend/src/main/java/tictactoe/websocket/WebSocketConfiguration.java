@@ -12,21 +12,12 @@ public class WebSocketConfiguration implements WebSocketMessageBrokerConfigurer 
 
     @Override
     public void configureMessageBroker(MessageBrokerRegistry registry) {
-        registry.enableSimpleBroker("/game");
-        registry.setApplicationDestinationPrefixes("/app");
+        registry.enableSimpleBroker("/game-response");
+        registry.setApplicationDestinationPrefixes("/game-request");
     }
 
     public void registerStompEndpoints(StompEndpointRegistry registry) {
-        registry
-                .addEndpoint("/ws")
-                .setAllowedOrigins("*")
-                .setHandshakeHandler(new CustomWebsocketHandshake());
-
-        registry
-                .addEndpoint("/ws")
-                .setAllowedOrigins("*")
-                .setHandshakeHandler(new CustomWebsocketHandshake())
-                .withSockJS();
+        registry.addEndpoint("/game-websocket");
     }
 
 }

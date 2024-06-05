@@ -1,15 +1,15 @@
-package tictactoe.game;
+package tictactoe.game.packet;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+@Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Data
-public class GamePlayer {
+public class GameJoinMessage {
 
-    private String name;
+    private String playerName;
 
     private String token;
 
