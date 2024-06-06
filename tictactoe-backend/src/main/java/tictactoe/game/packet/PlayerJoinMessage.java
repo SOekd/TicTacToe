@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class GameJoinMessage {
+public class PlayerJoinMessage {
 
     private String playerName;
 

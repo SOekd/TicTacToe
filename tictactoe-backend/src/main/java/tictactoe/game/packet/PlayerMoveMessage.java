@@ -9,6 +9,8 @@ import lombok.NoArgsConstructor;
 @Data
 public class PlayerMoveMessage {
 
+    private String playerToken;
+
     private int x;
 
     private int y;
