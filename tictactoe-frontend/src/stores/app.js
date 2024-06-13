@@ -1,8 +1,11 @@
 // Utilities
-import { defineStore } from 'pinia'
+import vuetify from '@/vuetify'
+import pinia from '@/stores'
+import router from '@/router'
 
-export const useAppStore = defineStore('app', {
-  state: () => ({
-    //
-  }),
-})
+export function registerPlugins (app) {
+  app
+    .use(vuetify)
+    .use(router)
+    .use(pinia)
+}
