@@ -1,4 +1,4 @@
-package tictactoe.game;
+package tictactoe.game.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -6,6 +6,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.mongodb.core.mapping.MongoId;
+import tictactoe.game.Game;
+import tictactoe.game.GameState;
 
 import java.time.LocalDateTime;
 
@@ -35,7 +37,7 @@ public class GameResponse {
     @CreatedDate
     private LocalDateTime created;
 
-    private String[] otp;
+    private String otp;
 
     private boolean publicGame;
 
