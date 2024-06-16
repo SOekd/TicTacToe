@@ -17,15 +17,15 @@ import java.time.LocalDateTime;
 @Builder
 public class GameResponse {
 
-    public static GameResponse parse(Game game) {
+    public static GameResponse parseResponse(Game game) {
         return GameResponse.builder()
                 .id(game.getId())
                 .created(game.getCreated())
                 .otp(game.getOtp())
                 .publicGame(game.isPublicGame())
-                .playerOne(game.getPlayerOne().getName())
-                .playerTwo(game.getPlayerTwo().getName())
-                .currentPlayer(game.getCurrentPlayer().getName())
+                .playerOne(game.getPlayerOne() == null ? null : game.getPlayerOne().getName())
+                .playerTwo(game.getPlayerTwo() == null ? null : game.getPlayerTwo().getName())
+                .currentPlayer(game.getCurrentPlayer() == null ? null : game.getCurrentPlayer().getName())
                 .board(game.getBoard())
                 .gameState(game.getGameState())
                 .build();

@@ -16,6 +16,7 @@ public class WebSocketConfiguration implements WebSocketMessageBrokerConfigurer 
         registry.setApplicationDestinationPrefixes("/game-request");
     }
 
+    @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
         registry.addEndpoint("/game-websocket");
     }

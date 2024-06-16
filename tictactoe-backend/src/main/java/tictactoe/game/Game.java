@@ -1,7 +1,6 @@
 package tictactoe.game;
 
 
-import com.mongodb.lang.Nullable;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -44,8 +43,6 @@ public class Game {
 
     private String[][] board = new String[3][3];
 
-
-    @Nullable
     public GamePlayer winner;
 
     private GameState gameState = GameState.WAITING;

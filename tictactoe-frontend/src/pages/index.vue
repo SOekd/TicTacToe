@@ -1,8 +1,8 @@
 <template>
-  <Menu></Menu>
+  <game-menu></game-menu>
 </template>
 
 <script setup>
   //
-import Menu from "@/components/Menu.vue";
+import GameMenu from "@/components/game-menu.vue";
 </script>

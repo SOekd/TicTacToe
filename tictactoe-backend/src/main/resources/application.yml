@@ -2,13 +2,10 @@ spring:
   application:
     name: TicTacToe
 
-  jpa:
-    database-platform: org.hibernate.dialect.H2Dialect
-    hibernate:
-      ddl-auto: update
-    show-sql: true
-  datasource:
-    url: jdbc:h2:mem:database;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
-    driver-class-name: org.h2.Driver
-    username: sa
-    password: password
+  docker:
+    compose:
+      file: './tictactoe-backend/docker-compose.yml'
+
+cors:
+  allowed-origins:
+    - 'http://localhost:3000'

@@ -24,6 +24,7 @@ repositories {
 extra["springModulithVersion"] = "1.2.0"
 
 dependencies {
+    implementation("org.springframework.boot:spring-boot-starter-security")
     implementation("org.springframework.boot:spring-boot-starter-data-mongodb")
     implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("org.springframework.boot:spring-boot-starter-websocket")
@@ -37,6 +38,7 @@ dependencies {
     annotationProcessor("org.projectlombok:lombok")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("org.springframework.modulith:spring-modulith-starter-test")
+    testImplementation("org.springframework.security:spring-security-test")
 }
 
 dependencyManagement {

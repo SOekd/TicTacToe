@@ -1,7 +1,3 @@
-<script setup>
-
-</script>
-
 <template>
   <v-container>
     <v-sheet class="pa-6">
@@ -13,7 +9,7 @@
         </v-row>
         <v-row justify="center">
           <v-col cols="auto">
-            <v-btn size="x-large" variant="tonal" color="green">
+            <v-btn size="x-large" variant="tonal" color="green" @click="createNewGame">
               Criar Partida
             </v-btn>
           </v-col>
@@ -45,7 +41,28 @@
 
 </template>
 
-<style scoped lang="sass">
+<script setup>
+import gameService from "@/api/service/GameService";
+
+function createNewGame() {
+  gameService.createGame(true).then(response => {
+    console.log("Game: " + response.data)
+    this.$router.push(`/game/${response.data.id}`);
+  }).catch(error => {
+    console.log(error)
+  })
+}
+
+async function joinGameByOtp(otp) {
+  gameService.getGameByOtp(otp)
+    .then(response => {
+      console.log(response)
+    })
+    .catch(error => { console.log(error) })
+}
+</script>
+
+<style scoped lang="scss">
 
 
 

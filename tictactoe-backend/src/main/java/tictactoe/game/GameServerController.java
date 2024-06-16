@@ -30,5 +30,10 @@ public class GameServerController {
         return gameService.validatePlayerToken(token);
     }
 
+    @GetMapping("/otp/{otp}")
+    public ResponseEntity<GameResponse> gameIdFromOtp(@PathVariable String otp) {
+        return gameService.findGameByOtp(otp);
+    }
+
 
 }

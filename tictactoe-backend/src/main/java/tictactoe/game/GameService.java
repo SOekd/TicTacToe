@@ -16,6 +16,8 @@ public interface GameService {
 
     ResponseEntity<GameResponse> createGame(GameCreateRequest request);
 
+    ResponseEntity<GameResponse> findGameByOtp(String otp);
+
     GameResponse makeMove(String gameId, PlayerMoveMessage move);
 
     GameResponse joinGame(String gameId, PlayerJoinMessage join);

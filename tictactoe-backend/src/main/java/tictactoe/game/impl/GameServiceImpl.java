@@ -8,6 +8,7 @@ import lombok.val;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import tictactoe.game.*;
+import tictactoe.game.exception.GameNotFoundException;
 import tictactoe.game.packet.PlayerJoinMessage;
 import tictactoe.game.packet.PlayerMoveMessage;
 import tictactoe.game.request.GameCreateRequest;
@@ -16,6 +17,7 @@ import tictactoe.game.response.TokenResponse;
 import tictactoe.game.response.ValidTokenResponse;
 import tictactoe.util.RandomUtils;
 
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Service
@@ -51,6 +53,7 @@ public class GameServiceImpl implements GameService {
     public ResponseEntity<GameResponse> createGame(GameCreateRequest request) {
         val gameBuilder = Game.builder()
                 .gameState(GameState.WAITING)
+                .created(LocalDateTime.now())
                 .publicGame(request.isPublicGame());
 
         if (request.isPublicGame()) {
@@ -59,7 +62,15 @@ public class GameServiceImpl implements GameService {
 
         val game = gameRepository.save(gameBuilder.build());
 
-        return ResponseEntity.ok(GameResponse.parse(game));
+        return ResponseEntity.ok(GameResponse.parseResponse(game));
+    }
+
+    @Override
+    public ResponseEntity<GameResponse> findGameByOtp(String otp) {
+        val game = gameRepository.findByOtp(otp)
+                .orElseThrow(() -> new GameNotFoundException("Game not found"));
+
+        return ResponseEntity.ok(GameResponse.parseResponse(game));
     }
 
     @Override
@@ -72,7 +83,7 @@ public class GameServiceImpl implements GameService {
 
         game.makeMove(move.getX(), move.getY(), move.getPlayerToken());
 
-        return GameResponse.parse(game);
+        return GameResponse.parseResponse(game);
     }
 
     @Override
@@ -84,7 +95,7 @@ public class GameServiceImpl implements GameService {
 
         game.join(new GamePlayer(join.getPlayerName(), join.getToken()));
 
-        return GameResponse.parse(game);
+        return GameResponse.parseResponse(game);
     }
 
     private String getNewToken() {

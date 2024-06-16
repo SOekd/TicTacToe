@@ -15,10 +15,10 @@ public class RandomUtils {
             throw new IllegalArgumentException("Invalid input");
         }
 
-        int length = RANDOM.nextInt(maximumLength - minimumLength) + minimumLength;
+        int length = RANDOM.nextInt(maximumLength - minimumLength + 1) + minimumLength;
         StringBuilder stringBuilder = new StringBuilder();
         for (int i = 0; i < length; i++) {
-            stringBuilder.append((char) (RANDOM.nextInt(26) + 'a'));
+            stringBuilder.append((char) (RANDOM.nextInt(26) + 'A'));
         }
         return stringBuilder.toString();
     }
