@@ -62,6 +62,11 @@ public class GameServiceImpl implements GameService {
 
         val game = gameRepository.save(gameBuilder.build());
 
+        System.out.println("Games:");
+        for (Game game1 : gameRepository.findAll()) {
+            System.out.println("Game: " + game1.getId());
+        }
+
         return ResponseEntity.ok(GameResponse.parseResponse(game));
     }
 

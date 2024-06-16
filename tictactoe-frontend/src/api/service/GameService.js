@@ -6,8 +6,11 @@ class GameService {
     return await httpService.post('games/create', {publicGame: isPublic})
   }
 
-  async validToken(oldToken) {
-    return await httpService.get('games/token/' + oldToken)
+  async getValidToken() {
+    return await httpService.get('games/token/' + (localStorage.getItem('token') || 'unknown'))
+      .then(response => {
+        return response.data.token
+      })
   }
 
   async getGameByOtp(otp) {

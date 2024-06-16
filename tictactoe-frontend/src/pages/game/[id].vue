@@ -1,7 +1,3 @@
-<script setup>
-
-</script>
-
 <template>
   <v-container>
     <v-btn variant="tonal" color="red">Sair</v-btn>
@@ -12,7 +8,7 @@
       <v-card-title>Adversario</v-card-title>
       <v-row class="pa-7">
         <v-col cols="auto">
-          <h2> Nome do Corno</h2>
+          <h2>{{ getOpponentName() == null ? 'Aguardando o oponente!' : getOpponentName() }}</h2>
         </v-col>
       </v-row>
     </v-card>
@@ -21,14 +17,11 @@
   <v-spacer></v-spacer>
 
   <v-container>
-    <v-responsive aspect-ratio="1/1" height="50%">
-      <v-sheet>
-        Posição 1
-      </v-sheet>
-    </v-responsive>
     <v-row no-gutters>
-      <v-col cols="4">
-
+      <v-col cols="4" class="fill-height">
+          <v-btn variant="text">
+            posição 1
+          </v-btn>
       </v-col>
       <v-divider vertical></v-divider>
       <v-col cols="4">
@@ -99,7 +92,7 @@
       <v-card-title>Você</v-card-title>
       <v-row class="pa-7">
         <v-col cols="auto">
-          <h2>{{ nameStorage.name }}</h2>
+          <h2>{{ playerName }}</h2>
         </v-col>
       </v-row>
     </v-card>
@@ -107,83 +100,110 @@
 </template>
 
 
-<script>
-import {Client, Message} from '@stomp/stompjs';
-import {defineProps, onMounted, onUnmounted, onBeforeMount} from 'vue';
-import {useTokenStorage} from "@/stores/tokenStorage";
+<script setup>
+import Stomp from 'webstomp-client'
+
+import {onUnmounted, onBeforeMount, ref} from 'vue';
 import {useNameStorage} from "@/stores/nameStorage";
+import gameService from "@/api/service/GameService";
 import {useRoute} from "vue-router";
 
-const route = useRoute();
+const route = useRoute()
+const joined = ref(false)
 
-const tokenStorage = useTokenStorage()
+
 const nameStorage = useNameStorage()
+
+const game = reactive({
+  id: '',
+  created: null,
+  otp: '',
+  publicGame: false,
+  playerOne: null,
+  playerTwo: null,
+  currentPlayer: null,
+  board: [
+    ['', '', ''],
+    ['', '', '']
+  ],
+  gameState: '',
+})
+
+const playerName = ref(nameStorage.getPlayerName())
+const token = ref('')
 
 const apiBaseUrl = import.meta.env.VITE_WEBSOCKET_URL;
 
-
-const socket = new Client({
-    brokerURL: `${apiBaseUrl}`
-  }
-)
-
-socket.onConnect(() => {
-  console.log('Conectado ao websocket')
+gameService.getValidToken().then((responseToken) => {
+  token.value = responseToken
 })
 
-socket.onStompError(() => {
-  console.log('Erro ao conectar ao websocket')
-})
+const socket = Stomp.client(apiBaseUrl)
 
-onUnmounted(() => {
-  socket.deactivate()
-})
-
-function sendJoinRequest() {
-  const token = tokenStorage.getToken
-  const playerName = nameStorage.getName
-
-  socket.publish({
-    destination: `/game-request/join/${route.params.id}`,
-    body: JSON.stringify({
-      token: token,
-      playerName: playerName
-    })
+socket.connect({}, () => {
+  socket.subscribe(`/response/move/${route.params.id}`, data => {
+    console.log("Received: " + data.body)
   })
 
+  socket.subscribe(`/response/join/${route.params.id}`, data => {
+    console.log("Joined: " + data.body)
+    joined.value = true
+    parseGame(data.body)
+
+    console.log("Opponent: " + getOpponentName())
+  })
+
+  sendJoinRequest()
+})
+
+function parseGame(jsonGame) {
+  const parsedJson = JSON.parse(jsonGame)
+
+  game.id = parsedJson.id
+  game.created = parsedJson.created
+  game.otp = parsedJson.otp
+  game.publicGame = parsedJson.publicGame
+  game.playerOne = parsedJson.playerOne
+  game.playerTwo = parsedJson.playerTwo
+  game.currentPlayer = parsedJson.currentPlayer
+  game.board = parsedJson.board
+  game.gameState = parsedJson.gameState
+}
+
+function sendJoinRequest() {
+
+  console.log("Sending join request")
+  console.log("Token:" + token)
+  console.log("Player:" + playerName)
+
+  socket.send(`/request/join/${route.params.id}`, JSON.stringify({
+    playerToken: token.value,
+    playerName: playerName.value
+  }))
+}
+
+onUnmounted(() => {
+  socket.disconnect()
+})
+function getOpponentName() {
+  if (game.playerOne === playerName.value) {
+    return game.playerTwo
+  } else {
+    return game.playerOne
+  }
 }
 
 function sendMoveRequest(x, y) {
-  const token = tokenStorage.getToken
 
-  socket.publish({
-    destination: `/game-request/move/${route.params.id}`,
-    body: JSON.stringify({
-      playerToken: token,
-      x: x,
-      y: y
-    })
-  })
+  console.log("Sending move request")
+
+  socket.send(`/request/move/${route.params.id}`, JSON.stringify({
+    playerToken: token.value,
+    x: x,
+    y: y
+  }))
 
 }
-
-onBeforeMount(() => {
-  tokenStorage.fetchToken().then(() => {
-    console.log(tokenStorage.token)
-
-    socket.activate();
-
-
-    socket.subscribe(`/game-response/move/${route.params.id}`, data => {
-      console.log("Received: " + data)
-    })
-
-    socket.subscribe(`/game-response/join/${route.params.id}`, data => {
-      console.log("Joined: " + data)
-    })
-
-  })
-})
 
 </script>
 

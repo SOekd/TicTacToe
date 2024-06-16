@@ -43,11 +43,12 @@
 
 <script setup>
 import gameService from "@/api/service/GameService";
+import router from "@/router";
 
 function createNewGame() {
   gameService.createGame(true).then(response => {
-    console.log("Game: " + response.data)
-    this.$router.push(`/game/${response.data.id}`);
+    console.log("Game: " + JSON.stringify(response.data))
+    router.push({ name: "game", params: { id: response.data.id } })
   }).catch(error => {
     console.log(error)
   })

@@ -47,6 +47,8 @@ public class Game {
 
     private GameState gameState = GameState.WAITING;
 
+    private List<String> sessions;
+
     public void setGameState(GameState state) {
         if (state == GameState.RUNNING) {
             resetBoard();
