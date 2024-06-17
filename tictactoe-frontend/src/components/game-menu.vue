@@ -43,12 +43,13 @@
 
 <script setup>
 import gameService from "@/api/service/GameService";
-import router from "@/router";
+import {useRouter} from "vue-router";
+
+const router = useRouter()
 
 function createNewGame() {
   gameService.createGame(true).then(response => {
-    console.log("Game: " + JSON.stringify(response.data))
-    router.push({ name: "game", params: { id: response.data.id } })
+    router.push("/game/" + response.data.id)
   }).catch(error => {
     console.log(error)
   })
