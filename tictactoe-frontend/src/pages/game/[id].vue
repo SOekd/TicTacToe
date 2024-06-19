@@ -1,91 +1,118 @@
 <template>
-  <v-container class="pt-8 min-h-screen min-w-screen">
-    <v-container class="justify-center">
-      <v-row class="justify-space-between align-center">
-        <v-col cols="auto" align-self="start">
-          <v-btn variant="tonal" color="red">Sair</v-btn>
-        </v-col>
-        <v-col cols="auto" align-self="end">
-          <v-label style="font-size: 5vw;">SENHA: {{game.otp}}</v-label>
-        </v-col>
-      </v-row>
+  <v-sheet width="100%" height="100%" theme="dark" class="pa-0">
+    <v-container class="justify-center flex flex-column align-center fill-height pa-0">
+      <v-container>
+        <v-container class="justify-center pa-0">
+          <v-row class="justify-space-between align-center">
+            <v-col cols="auto" align-self="start">
+              <v-btn variant="tonal" color="red" to="/">Sair</v-btn>
+            </v-col>
+            <v-col>
+              <v-dialog max-width="500px"
+                        transition="dialog-bottom-transition">
+                <template v-slot:activator="{props:activatorProps}">
+                  <v-btn variant="tonal"
+                         color="blue"
+                         v-bind="activatorProps"
+                         elevation="5"
+                         rounded="lg"
+                         class="cursor-pointer">
+                    <div>
+                      TESTE
+                    </div>
+                  </v-btn>
+                </template>
+                <template v-slot:default="{ isActive }">
 
+                </template>
+
+              </v-dialog>
+            </v-col>
+            <v-col cols="auto" align-self="end">
+              <v-label class="text-md-h4 text-sm-h5 text-body-1">SENHA: {{ game.otp }}</v-label>
+            </v-col>
+          </v-row>
+
+        </v-container>
+        <v-card>
+          <v-card-title class="text-center">
+            <h2 class="text-md-h4 text-sm-h5 text-body-1">ADVERSÁRIO</h2>
+          </v-card-title>
+          <v-row class="pa-7">
+            <v-col cols="auto" align-self="center">
+              <p class="text-md-h4 text-sm-h5 text-body-1">
+                {{ getOpponentName() == null ? 'Aguardando o oponente!' : getOpponentName() }}</p>
+            </v-col>
+          </v-row>
+        </v-card>
+      </v-container>
+
+      <v-spacer></v-spacer>
+
+      <v-container class="flex flex-column" style="aspect-ratio: 1/1; max-width: 50vh">
+        <v-row no-gutters>
+          <v-col cols="4"
+                 class="justify-center align-center"
+                 style="border-right: white 3px solid; border-bottom: white 3px solid; aspect-ratio: 1/1; width: 33%">
+            <v-btn width="100%" height="100%" elevation="0"><h1 style="font-size:7.0vh">A</h1></v-btn>
+          </v-col>
+          <v-col cols="4"
+                 style="border-bottom: white 3px solid; aspect-ratio: 1/1; width: 33%">
+            <v-btn width="100%" height="100%" elevation="0"><h1 style="font-size: 7vh">A</h1></v-btn>
+          </v-col>
+          <v-col cols="4"
+                 style="border-left: white 3px solid; border-bottom: white 3px solid; aspect-ratio: 1/1; width: 33%">
+            <v-btn width="100%" height="100%" elevation="0"><h1 style="font-size:7.0vh">A</h1></v-btn>
+          </v-col>
+        </v-row>
+        <v-row no-gutters>
+          <v-col cols="4"
+                 style="border-right: white 3px solid; aspect-ratio: 1/1; width: 33%">
+            <v-btn width="100%" height="100%" elevation="0"><h1 style="font-size: 7.0vh;">A</h1></v-btn>
+          </v-col>
+          <v-col cols="4"
+                 style="aspect-ratio: 1/1; width: 33%">
+            <v-btn width="100%" height="100%" elevation="0"><h1 style="font-size: 7.0vh;">A</h1></v-btn>
+          </v-col>
+          <v-col cols="4"
+                 style="border-left: white 3px solid; aspect-ratio: 1/1; width: 33%">
+            <v-btn width="100%" height="100%" elevation="0"><h1 style="font-size: 7.0vh;">A</h1></v-btn>
+          </v-col>
+        </v-row>
+        <v-row no-gutters>
+          <v-col cols="4"
+                 style="border-right: white 3px solid;border-top: white 3px solid;aspect-ratio: 1/1; width: 33%">
+            <v-btn width="100%" height="100%" elevation="0"><h1 style="font-size: 7.0vh;">A</h1></v-btn>
+          </v-col>
+          <v-col cols="4"
+                 style="border-top: white 3px solid; aspect-ratio: 1/1; width: 33%">
+            <v-btn width="100%" height="100%" elevation="0"><h1 style="font-size: 7.0vh;">A</h1></v-btn>
+          </v-col>
+          <v-col cols="4"
+                 style="border-left: white 3px solid; border-top: white 3px solid; aspect-ratio: 1/1; width: 33%">
+            <v-btn width="100%" height="100%" elevation="0"><h1 style="font-size: 7.0vh;">A</h1></v-btn>
+          </v-col>
+        </v-row>
+
+
+      </v-container>
+
+      <v-spacer></v-spacer>
+
+      <v-container>
+        <v-card>
+          <v-card-title class="text-center">
+            <h2 class="text-md-h4 text-sm-h5 text-body-1">VOCÊ</h2>
+          </v-card-title>
+          <v-row class="pa-7">
+            <v-col cols="auto">
+              <h2 class="text-md-h4 text-sm-h5 text-body-1">{{ playerName }}</h2>
+            </v-col>
+          </v-row>
+        </v-card>
+      </v-container>
     </v-container>
-    <v-card>
-      <v-card-title class="text-center">
-        <h2 style="font-size: 6vw;">ADVERSÁRIO</h2>
-      </v-card-title>
-      <v-row class="pa-7">
-        <v-col cols="auto" align-self="center">
-          <p style="font-size: 6vw;">{{ getOpponentName() == null ? 'Aguardando o oponente!' : getOpponentName() }}</p>
-        </v-col>
-      </v-row>
-    </v-card>
-  </v-container>
-
-  <v-spacer></v-spacer>
-
-  <v-container class="flex flex-column">
-    <v-row no-gutters>
-      <v-col cols="4"
-             class="justify-center align-center"
-             style="border-right: white 1px solid; border-bottom: white 1px solid; aspect-ratio: 1/1; width: 33%">
-        <v-btn width="100%" height="100%" style="font-size: 9vw;"><h1>A</h1></v-btn>
-      </v-col>
-      <v-col cols="4"
-             style="border-bottom: white 1px solid; aspect-ratio: 1/1; width: 33%">
-        <v-btn width="100%" height="100%" style="font-size: 9vw;"><h1>A</h1></v-btn>
-      </v-col>
-      <v-col cols="4"
-             style="border-left: white 1px solid; border-bottom: white 1px solid; aspect-ratio: 1/1; width: 33%">
-        <v-btn width="100%" height="100%" style="font-size: 9vw;"><h1>A</h1></v-btn>
-      </v-col>
-    </v-row>
-    <v-row no-gutters>
-      <v-col cols="4"
-             style="border-right: white 1px solid; aspect-ratio: 1/1; width: 33%">
-        <v-btn width="100%" height="100%" style="font-size: 9vw;"><h1>A</h1></v-btn>
-      </v-col>
-      <v-col cols="4"
-             style="aspect-ratio: 1/1; width: 33%">
-        <v-btn width="100%" height="100%" style="font-size: 9vw;"><h1>A</h1></v-btn>
-      </v-col>
-      <v-col cols="4"
-             style="border-left: white 1px solid; aspect-ratio: 1/1; width: 33%">
-        <v-btn width="100%" height="100%" style="font-size: 9vw;"><h1>A</h1></v-btn>
-      </v-col>
-    </v-row>
-    <v-row no-gutters>
-      <v-col cols="4"
-             style="border-right: white 1px solid;border-top: white 1px solid;aspect-ratio: 1/1; width: 33%">
-        <v-btn width="100%" height="100%" style="font-size: 9vw;"><h1>A</h1></v-btn>
-      </v-col>
-      <v-col cols="4"
-             style="border-top: white 1px solid; aspect-ratio: 1/1; width: 33%">
-        <v-btn width="100%" height="100%" style="font-size: 9vw;"><h1>A</h1></v-btn>
-      </v-col>
-      <v-col cols="4"
-             style="border-left: white 1px solid; border-top: white 1px solid; aspect-ratio: 1/1; width: 33%">
-        <v-btn width="100%" height="100%" style="font-size: 9vw;"><h1>A</h1></v-btn>
-      </v-col>
-    </v-row>
-
-  </v-container>
-
-  <v-spacer></v-spacer>
-
-  <v-container>
-    <v-card>
-      <v-card-title class="text-center">
-        <h2 style="font-size: 6vw;">VOCÊ</h2>
-      </v-card-title>
-      <v-row class="pa-7">
-        <v-col cols="auto">
-          <h2 style="font-size: 6vw;">{{ playerName }}</h2>
-        </v-col>
-      </v-row>
-    </v-card>
-  </v-container>
+  </v-sheet>
 </template>
 
 
