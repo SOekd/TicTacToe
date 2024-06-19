@@ -11,6 +11,6 @@ public class PlayerJoinMessage {
 
     private String playerName;
 
-    private String token;
+    private String playerToken;
 
 }

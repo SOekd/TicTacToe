@@ -20,7 +20,8 @@ public interface GameService {
 
     GameResponse makeMove(String gameId, PlayerMoveMessage move);
 
-    GameResponse joinGame(String gameId, PlayerJoinMessage join);
+    GameResponse joinGame(String sessionId, String gameId, PlayerJoinMessage join);
 
+    void leaveGame(String sessionId);
 
 }

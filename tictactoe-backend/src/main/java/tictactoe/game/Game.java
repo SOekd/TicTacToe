@@ -1,18 +1,13 @@
 package tictactoe.game;
 
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.mongodb.core.mapping.MongoId;
 import tictactoe.util.RandomUtils;
 
 import java.time.LocalDateTime;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 
 @Data
@@ -22,11 +17,13 @@ import java.util.Optional;
 public class Game {
 
     private static final String BOARD_PLAYER_ONE = "X";
-    private static final String BOARD_PLAYER_TWO = "Y";
+    private static final String BOARD_PLAYER_TWO = "O";
     private static final String BOARD_EMPTY = "";
 
     @MongoId
-    public String id;
+    private String id;
+
+    private Long moveCounter;
 
     @CreatedDate
     private LocalDateTime created;
@@ -49,6 +46,8 @@ public class Game {
 
     private List<String> sessions;
 
+    private Map<String, List<GameMove>> lastMoves;
+
     public void setGameState(GameState state) {
         if (state == GameState.RUNNING) {
             resetBoard();
@@ -60,7 +59,7 @@ public class Game {
 
 
     public void join(GamePlayer gamePlayer) {
-        if (gamePlayer.equals(playerOne) || gamePlayer.equals(playerTwo)) {
+        if (gamePlayer.equals(playerOne) || gamePlayer.equals(playerTwo) || gameState != GameState.WAITING) {
             return;
         }
 
@@ -68,23 +67,20 @@ public class Game {
             playerOne = gamePlayer;
         } else {
             playerTwo = gamePlayer;
+
+            setGameState(GameState.RUNNING);
         }
     }
 
-    public void leave(GamePlayer gamePlayer) {
-        if (gamePlayer.equals(playerOne)) {
-            playerOne = null;
-        } else if (gamePlayer.equals(playerTwo)) {
-            playerTwo = null;
-        }
-
-        if (gameState == GameState.WAITING)
-            return;
-
+    public void leave() {
         setGameState(GameState.DISCONNECTED);
     }
 
     public void makeMove(int x, int y, String playerToken) {
+        if (gameState != GameState.RUNNING) {
+            return;
+        }
+
         if ((x < 0 || x >= 3) || (y < 0 || y >= 3)) {
             return;
         }
@@ -101,11 +97,25 @@ public class Game {
             return;
         }
 
-        board[x][y] = getCurrentLetter();
+        val currentLetter = getCurrentLetter();
+
+        board[x][y] = currentLetter;
+
+        lastMoves.computeIfAbsent(currentLetter, k -> new ArrayList<>()).add(new GameMove(x, y));
+        deleteLastThirdMove(currentLetter);
 
         checkState();
+
         if (gameState == GameState.RUNNING) {
             swapPlayer();
+        }
+    }
+
+    private void deleteLastThirdMove(String currentLetter) {
+        if (lastMoves.containsKey(currentLetter) && lastMoves.get(currentLetter).size() == 4) {
+            val move = lastMoves.get(currentLetter).remove(0);
+
+            board[move.getX()][move.getY()] = BOARD_EMPTY;
         }
     }
 
@@ -184,10 +194,8 @@ public class Game {
         if (board[0][0].equals(letter) && board[1][1].equals(letter) && board[2][2].equals(letter))
             return true;
 
-
         return board[0][2].equals(letter) && board[1][1].equals(letter) && board[2][0].equals(letter);
     }
-
 
     private void resetBoard() {
         for (String[] row : board) {
@@ -195,9 +203,12 @@ public class Game {
         }
     }
 
-
     private boolean isCurrentPlayer(String playerToken) {
         return currentPlayer.getToken().equals(playerToken);
+    }
+
+    private String getOppositeLetter(String letter) {
+        return letter.equals(BOARD_PLAYER_ONE) ? BOARD_PLAYER_TWO : BOARD_PLAYER_ONE;
     }
 
     private void swapPlayer() {

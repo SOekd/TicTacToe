@@ -20,7 +20,7 @@ public class TicTacToeBackendApplication   {
     }
 
     @EventListener(ApplicationReadyEvent.class)
-    public void afterStartup() {
-        System.out.println("hello world, I have just started up");
+    public void deleteGamesOnStartup() {
+        gameRepository.deleteAll();
     }
 }

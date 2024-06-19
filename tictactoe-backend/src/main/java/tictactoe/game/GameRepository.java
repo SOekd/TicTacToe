@@ -9,6 +9,6 @@ public interface GameRepository extends MongoRepository<Game, String> {
 
     Optional<Game> findByOtp(String otp);
 
-    List<Game> findAllBySessionsContainingIgnoreCase(String session);
+    List<Game> findAllBySessionsContaining(String sessionId);
 
 }

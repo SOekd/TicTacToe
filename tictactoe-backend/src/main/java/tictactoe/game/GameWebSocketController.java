@@ -10,6 +10,8 @@ import tictactoe.game.packet.PlayerJoinMessage;
 import tictactoe.game.packet.PlayerMoveMessage;
 import tictactoe.game.response.GameResponse;
 
+import java.sql.SQLOutput;
+
 @Controller
 @RequiredArgsConstructor
 public class GameWebSocketController {
@@ -18,19 +20,14 @@ public class GameWebSocketController {
 
     @MessageMapping("/move/{id}")
     @SendTo("/response/move/{id}")
-    public GameResponse onGameMove(@DestinationVariable String id, @Header("simpSessionId") String sessionId, PlayerMoveMessage move)  {
-
-        System.out.println("RECEIVED!!: " + sessionId);
-
+    public GameResponse onGameMove(@DestinationVariable String id, PlayerMoveMessage move)  {
         return gameService.makeMove(id, move);
     }
 
     @MessageMapping("/join/{id}")
     @SendTo("/response/join/{id}")
     public GameResponse onGameJoin(@DestinationVariable String id, @Header("simpSessionId") String sessionId, PlayerJoinMessage move)  {
-
-        System.out.println("RECEIVED 2 !!: " + sessionId);
-        return gameService.joinGame(id, move);
+        return gameService.joinGame(sessionId, id, move);
     }
 
 }
