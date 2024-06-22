@@ -10,17 +10,10 @@ import org.springframework.context.event.EventListener;
 import tictactoe.game.GameRepository;
 
 @SpringBootApplication
-@AllArgsConstructor
-public class TicTacToeBackendApplication   {
-
-    private final GameRepository gameRepository;
+public class TicTacToeBackendApplication {
 
     public static void main(String[] args) {
         SpringApplication.run(TicTacToeBackendApplication.class, args);
     }
 
-    @EventListener(ApplicationReadyEvent.class)
-    public void deleteGamesOnStartup() {
-        gameRepository.deleteAll();
-    }
 }

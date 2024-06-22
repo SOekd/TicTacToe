@@ -129,9 +129,10 @@ public class Game {
 
     private void checkState() {
 
-        if (hasWinner().isPresent()) {
+        val currentWinner = getCurrentWinner();
+        if (currentWinner.isPresent()) {
             gameState = GameState.FINISHED;
-            winner = hasWinner().get();
+            this.winner = currentWinner.get();
             return;
         }
 
@@ -141,7 +142,8 @@ public class Game {
 
     }
 
-    private Optional<GamePlayer> hasWinner() {
+    private Optional<GamePlayer> getCurrentWinner() {
+
         if (isWinner(playerOne)) {
             return Optional.of(playerOne);
         }
@@ -154,6 +156,9 @@ public class Game {
     }
 
     private boolean isWinner(GamePlayer player) {
+        if (player == null) {
+            return false;
+        }
 
         if (checkRow(getLetter(player))) {
             return true;
@@ -197,7 +202,7 @@ public class Game {
         return board[0][2].equals(letter) && board[1][1].equals(letter) && board[2][0].equals(letter);
     }
 
-    private void resetBoard() {
+    public void resetBoard() {
         for (String[] row : board) {
             Arrays.fill(row, BOARD_EMPTY);
         }

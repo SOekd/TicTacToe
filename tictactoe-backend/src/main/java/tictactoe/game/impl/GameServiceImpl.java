@@ -67,9 +67,9 @@ public class GameServiceImpl implements GameService {
             gameBuilder.otp(RandomUtils.getRandomString(6, 6));
         }
 
-        val game = gameRepository.save(gameBuilder.build());
+        val savedGame = gameRepository.save(gameBuilder.build());
 
-        return ResponseEntity.ok(GameResponse.parseResponse(game));
+        return ResponseEntity.ok(GameResponse.parseResponse(savedGame));
     }
 
     @Override

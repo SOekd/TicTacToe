@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import tictactoe.game.Game;
+import tictactoe.game.GamePlayer;
 import tictactoe.game.GameState;
 
 import java.time.LocalDateTime;
@@ -23,6 +24,7 @@ public class GameResponse {
                 .publicGame(game.isPublicGame())
                 .playerOne(game.getPlayerOne() == null ? null : game.getPlayerOne().getName())
                 .playerTwo(game.getPlayerTwo() == null ? null : game.getPlayerTwo().getName())
+                .winner(game.getWinner() == null ? null : game.getWinner().getName())
                 .currentPlayer(game.getCurrentPlayer() == null ? null : game.getCurrentPlayer().getName())
                 .board(game.getBoard())
                 .gameState(game.getGameState())
@@ -40,6 +42,8 @@ public class GameResponse {
     private String playerOne;
 
     private String playerTwo;
+
+    private String winner;
 
     private String currentPlayer;
 
